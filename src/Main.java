@@ -1,12 +1,16 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static Connection  conn = null;
+    public static Paciente p=null;
+    public static ArrayList<Paciente> listado_pacientes = new ArrayList<>();
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException {
         int opcion =0;
+        Paciente p=null;
         do{
             System.out.println("0.Salir del programa");
             System.out.println("1. Establecer conexión con el sgbd");
@@ -19,6 +23,8 @@ public class Main {
             System.out.println("8. Eliminar por dni introducido por teclado");
             System.out.println("9. Actualizar el numero de operaciones de un paciente cuyo DNI es introducido por teclado");
             System.out.println("10. Consultar datos ");
+            System.out.println("11. Insertar en BASE DE DATOS apartir de una CLASE");
+            System.out.println("12. Almacenar los registros de la BASE DE DATOS en un arraylist");
             System.out.println("Introduzca una opción por favor");
             opcion = sc.nextInt();
 
@@ -34,6 +40,13 @@ public class Main {
                 case 8 : borrar_registro();break;
                 case 9 : actualizar_registro();break;
                 case 10: consultar_registro();break;
+
+                case 11: p = construir_objeto();
+                    insertar_objeto(p);break;
+
+                case 12: insertar_array();break;
+
+
             }
 
 
@@ -41,16 +54,74 @@ public class Main {
 
     }
 
+    private static void insertar_array() throws SQLException {
+        asignar_bd();
+
+        PreparedStatement ps = conn.prepareStatement("select * from paciente");
+        ResultSet rs = ps.executeQuery();
+
+        Paciente p=null;
+
+        while (rs.next()){
+
+            p=new Paciente(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4) );
+            listado_pacientes.add(p);
+
+        }
+
+       // System.out.println(listado_pacientes.toString());
+
+        //lo llamo "e" pq "p" ya esta en uso
+        for (Paciente e : listado_pacientes){
+            System.out.println(e.toString());
+        }
+
+
+
+
+
+    }
+
+    private static void insertar_objeto(Paciente p) throws SQLException {
+        asignar_bd();
+        PreparedStatement ps = conn.prepareStatement("insert into paciente values (?,?,?,?)");
+        ps.setString(1,p.getDni());
+        ps.setString(2,p.getNombre());
+        ps.setString(3, p.getApellido());
+        ps.setInt(4, p.getN_operaciones());
+        ps.executeUpdate();
+
+        System.out.println("Registro objeto insertado correctamente");
+
+    }
+
+    private static Paciente construir_objeto() {
+        //generar un objeto de la clase paciente a partir de datos introducidos por teclado.
+        System.out.println("Introduzca el dni");
+        String dni = sc.next();
+
+        System.out.println("Introduzca el nombre");
+        String nombre = sc.next();
+
+        System.out.println("Introduzca el apellido");
+        String apellido = sc.next();
+
+        System.out.println("Introduzca el numero de operaciones");
+        int n_operaciones = sc.nextInt();
+
+        Paciente p = new Paciente(dni,nombre,apellido,n_operaciones);
+
+        return p;
+    }
+
     private static void consultar_registro() throws SQLException{
         asignar_bd();
-        PreparedStatement ps = conn.prepareStatement("select * from paciente where dni=?");
-        System.out.println("Introduzca el dni del paciente a actualizar");
-        String dni = sc.next();
-        ps.setString(1, dni);
+        PreparedStatement ps = conn.prepareStatement("select * from paciente");
         ResultSet rs = ps.executeQuery();
+
         while (rs.next()){
             System.out.println("El paciente con DNI: "+rs.getString(1)+ " y NOMBRE: "+rs.getString(2)
-             + " y APELLIDOS "+rs.getString(3) + " tiene un total de "+ rs.getString(4)+ " OPERACIONES");
+                    + " y APELLIDOS "+rs.getString(3) + " tiene un total de "+ rs.getString(4)+ " OPERACIONES");
         }
 
     }
