@@ -44,8 +44,7 @@ public class Paciente {
         this.n_operaciones = n_operaciones;
     }
 
-    @Override
-    public String toString() {
+    @Override  public String toString() {
         return "Paciente{" +
                 "dni='" + dni + '\'' +
                 ", nombre='" + nombre + '\'' +
@@ -53,4 +52,5 @@ public class Paciente {
                 ", n_operaciones=" + n_operaciones +
                 '}';
     }
+
 }

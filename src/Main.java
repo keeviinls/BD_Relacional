@@ -1,5 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Main {
@@ -25,6 +27,12 @@ public class Main {
             System.out.println("10. Consultar datos ");
             System.out.println("11. Insertar en BASE DE DATOS apartir de una CLASE");
             System.out.println("12. Almacenar los registros de la BASE DE DATOS en un arraylist");
+            System.out.println("13. Ordenar arraylist por el numero de opearciones de manera descendente");
+            System.out.println("14. Ordenar el arraylist por numero de operaciones descendente y despues por apellido ascendente");
+            System.out.println("15. SHOW DATABASES");
+            System.out.println("16. SHOW DATABASES WITH METADATEOBJETC");    /*si en el examen pide usar un METADATE, HAY QUE USAR ESTA OPCION, LA DE OBJECT.*/
+
+
             System.out.println("Introduzca una opción por favor");
             opcion = sc.nextInt();
 
@@ -45,6 +53,10 @@ public class Main {
                     insertar_objeto(p);break;
 
                 case 12: insertar_array();break;
+                case 13: ordenar_noperaciones_desc();break;
+                case 14: ordenar_noperaciones_desc_apellido_asc();break;
+                case 15: mostrar_bd();break;
+                case 16: mostrar_bd2();break;
 
 
             }
@@ -52,6 +64,46 @@ public class Main {
 
         }while (opcion!=0);
 
+    }
+
+    private static void mostrar_bd2() throws SQLException {
+        DatabaseMetaData databaseMetaData = conn.getMetaData();
+        ResultSet resultados = databaseMetaData.getCatalogs();
+        while (resultados.next()){
+            System.out.println(resultados.getString(1));
+        }
+    }
+
+    private static void mostrar_bd() throws SQLException {
+        asignar_bd();
+        String query="Show DATABASES";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while (rs.next()){
+            System.out.println(rs.getString(1));
+        }
+
+    }
+
+    private static void ordenar_noperaciones_desc_apellido_asc() throws SQLException{
+         asignar_bd();
+         listado_pacientes.sort(Comparator.comparing(Paciente::getN_operaciones).reversed().thenComparing(Paciente::getApellido));
+         for (int i=0;i<listado_pacientes.size();i++){
+             System.out.println(listado_pacientes.get(i).toString());
+         }
+
+
+
+    }
+
+    private static void ordenar_noperaciones_desc() throws SQLException {
+        asignar_bd();
+        listado_pacientes.sort(Comparator.comparing(Paciente::getN_operaciones).reversed());
+        Iterator<Paciente> itr2 = listado_pacientes.iterator();
+        while (itr2.hasNext()){
+            System.out.println(itr2.next().toString());
+
+        }
     }
 
     private static void insertar_array() throws SQLException {
