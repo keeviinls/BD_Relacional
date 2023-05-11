@@ -2,13 +2,18 @@ package ejerciciopractico;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class main {
     static Scanner sc = new Scanner(System.in);
-   public static Connection conn = null;
+
+    static Jugador [] array_estatico_jugadores;
+    static ArrayList<Jugador> array_dinamico_jugadores = new ArrayList<>();
+   static Jugador j = null;
+
+     static Connection conn = null;
     public static void main(String[] args) throws SQLException {
-        Jugador j = null;
         int opcion =0;
         do{
             System.out.println("0.Salir del programa");
@@ -18,7 +23,9 @@ public class main {
             System.out.println("4. Eliminar tabla");
             System.out.println("5. Insertar jugador");
             System.out.println("6. Buscar jugador por dorsal y almacemos en un objeto jugador e imprimimos ese objeto");
-
+            System.out.println("7. Imprimir Array ESTATICO");
+            System.out.println("8. Array DINAMICO");
+            System.out.println("9. Mostrar tablas de la BD EJERCICIOPRACTICO");
 
 
             System.out.println("Introduzca una opción por favor");
@@ -51,19 +58,24 @@ public class main {
                     j = buscar_por_dorsal(dorsal);
                     System.out.println(j.toString());break;
                 case 7 :
-                    Jugador [] array_estatico_jugadores = almacenar_array_estatico();  //AQUI EL ARRAY SERIA ESTATICO, ES AQUEL QUE PARA DEFINIRLO NECESITAMOS SU DIMENSION
+                    //ESTO PUEDE SER MUY SIMILAR A LO QUE HAYA EN EL EXAMEN EN CUANTO A LOS ARRAYS, va a ser UNIDIMENSIONAL, ESO PARECE
+                    //para el 1 trimestre lo mas imporatnte es saber ARRAYS ESTATICOS,
+                    array_estatico_jugadores = almacenar_array_estatico();   //AQUI EL ARRAY SERIA ESTATICO, ES AQUEL QUE PARA DEFINIRLO NECESITAMOS SU DIMENSION
+                    System.out.println(Arrays.toString(array_estatico_jugadores));
 
-
-
-
-                case 8 :
-
-
-                    ArrayList<Jugador> arrayList = almacenar_array_dinamico  //AQUI EL ARRAY SERIA DINAMICO
                     break;
 
 
-                case 9 : break;
+                case 8 :
+                array_dinamico_jugadores = almacenar_array_dinamico();
+                for (Jugador p : array_dinamico_jugadores){
+                    System.out.println(p.toString());
+                }
+                    break;
+
+                case 9 :
+                    mostrar_tablas();
+                    break;
                 case 10: break;
 
 
@@ -75,9 +87,51 @@ public class main {
 
     }
 
-    private static Jugador[] almacenar_array_estatico() throws SQLException{
+    private static void mostrar_tablas()throws SQLException {
+        DatabaseMetaData databaseMetaData = conn.getMetaData();
 
-        PreparedStatement ps = "select count(*) from jugador";
+        ResultSet rs = databaseMetaData.getTables()
+    }
+
+    private static ArrayList<Jugador> almacenar_array_dinamico() throws SQLException{
+        establecer_conexion();
+        asignar_bd();
+
+        PreparedStatement ps = conn.prepareStatement("select * from jugador");
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()){
+            j=new Jugador(rs.getString(1), rs.getString(2),rs.getInt(3), rs.getDouble(4), rs.getInt(5));
+            array_dinamico_jugadores.add(j);
+        }
+
+        return array_dinamico_jugadores;
+
+    }
+
+    private static Jugador[] almacenar_array_estatico() throws SQLException{
+        establecer_conexion();
+        asignar_bd();
+
+        PreparedStatement ps = conn.prepareStatement("select count(*) from jugador");
+        ResultSet rs = ps.executeQuery();
+        int dimension =0;
+        while (rs.next()){
+            dimension = rs.getInt(1);
+        }
+        array_estatico_jugadores = new Jugador[dimension];
+
+
+        ps = conn.prepareStatement("select * from jugador");
+        rs = ps.executeQuery();
+        int i = 0;
+
+        while (rs.next()){
+            j=new Jugador(rs.getString(1), rs.getString(2),rs.getInt(3), rs.getDouble(4), rs.getInt(5));
+            array_estatico_jugadores[i] = j;
+            i++;
+        }
+        return array_estatico_jugadores;
 
     }
 
