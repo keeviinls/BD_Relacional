@@ -88,9 +88,16 @@ public class main {
     }
 
     private static void mostrar_tablas()throws SQLException {
+
+
         DatabaseMetaData databaseMetaData = conn.getMetaData();
 
-        ResultSet rs = databaseMetaData.getTables()
+        ResultSet rs = databaseMetaData.getTables("ejerciciopractico", "ejerciciopractico", null, null); //PONGO NULL PQ NO QUIERO SACAR NADA DE LA TABLA
+        while (rs.next()){
+            System.out.println(rs.getString(3)); //1 pq asi me devuelve el nombre de la tabla, creo
+        }
+
+        System.out.println("la url de mi bbdd es :"+databaseMetaData.getURL());
     }
 
     private static ArrayList<Jugador> almacenar_array_dinamico() throws SQLException{
