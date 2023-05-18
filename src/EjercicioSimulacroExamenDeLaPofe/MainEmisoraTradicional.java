@@ -1,16 +1,16 @@
-package EjericicioSimulacroExamen;
+package EjercicioSimulacroExamenDeLaPofe;
 
 import java.sql.*;
 import java.util.Scanner;
 
 public class MainEmisoraTradicional {
     static Scanner sc = new Scanner(System.in);
-    static Connection  conn;
+    static Connection conn;
     static EmisoraTradicional[] array_estatico;
 
     public static void main(String[] args) throws SQLException, AccionInvalida {
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "admin");
-        int opcion = 0;
+        int opcion=0;
+        conn=  DriverManager.getConnection("jdbc:mysql://localhost:3306/","root","admin");
         do {
             System.out.println("0. Salir del programa");
             System.out.println("1. Crear tabla emisoratradicional");
@@ -26,7 +26,7 @@ public class MainEmisoraTradicional {
                 case 1: crear_tabla_emisora();
                     break;
                 case 2: insertar_array_estatico();
-                    break;
+                   break;
 
             }
         }         while (opcion != 0) ;
@@ -44,8 +44,8 @@ public class MainEmisoraTradicional {
         for (int i=0;i< array_estatico.length;i++){
             System.out.println("Procedemos a la inserción en el array de la posicion"+i);
 
-            System.out.println("introduzcame el identificador de la emisora");
-            int num_emisora = sc.nextInt();
+             System.out.println("introduzcame el identificador de la emisora");
+             int num_emisora = sc.nextInt();
 
 
             System.out.println("introduzcame el nombre de la emisora");
@@ -115,5 +115,5 @@ public class MainEmisoraTradicional {
         System.out.println("Asignación realizada correctamente");
     }
 
-
 }
+

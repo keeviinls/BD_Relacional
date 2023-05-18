@@ -1,15 +1,17 @@
-package EjericicioSimulacroExamen;
+package EjercicioSimulacroExamenDeLaPofe;
 
 public class EmisoraTradicional extends Emisora{
+    //atributos
     Frecuencia frecuencia;
-
     double num_frecuencia;
+
+    //constructor parametrizado
 
     public EmisoraTradicional(int num_emisora, String nombre_emisora, int num_oyentes, String frecuencia, double num_frecuencia) throws AccionInvalida {
         super(num_emisora, nombre_emisora, num_oyentes);
         if (Frecuencia.AM.toString().equals(frecuencia.toUpperCase()) || Frecuencia.FM.toString().equals(frecuencia.toUpperCase())){
 
-            this.frecuencia=Frecuencia.valueOf(frecuencia.toUpperCase());
+           this.frecuencia=Frecuencia.valueOf(frecuencia.toUpperCase());
         }
         else {
             throw new AccionInvalida("no ha introducido una frecuencia correcta");
