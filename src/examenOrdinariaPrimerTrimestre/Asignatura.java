@@ -5,6 +5,7 @@ public class Asignatura {
     private String nombre;
     private double nota_examen;
     private double nota_practica;
+    //constructor
 
     public Asignatura(int id, String nombre, double nota_examen, double nota_practica) {
         this.id = id;
@@ -12,6 +13,9 @@ public class Asignatura {
         this.nota_examen = nota_examen;
         this.nota_practica = nota_practica;
     }
+
+
+    //getters setters
 
     public int getId() {
         return id;
@@ -43,5 +47,18 @@ public class Asignatura {
 
     public void setNota_practica(double nota_practica) {
         this.nota_practica = nota_practica;
+    }
+
+    //tostring
+
+
+    @Override
+    public String toString() {
+        return "Asignatura{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", nota_examen=" + nota_examen +
+                ", nota_practica=" + nota_practica +
+                '}';
     }
 }
